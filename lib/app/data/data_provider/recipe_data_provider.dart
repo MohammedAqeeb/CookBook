@@ -1,5 +1,4 @@
 import 'package:cookbook/app/data/keys/app_keys.dart';
-import 'package:cookbook/models/ingredient.dart';
 import 'package:cookbook/models/recipe.dart';
 import 'package:dio/dio.dart';
 
@@ -14,7 +13,7 @@ class RecipeDataProvider {
 
     try {
       final response = await dio.get(
-          '$baseUrl/recipes/random?number=10&include-tags=chicken',
+          '$baseUrl/recipes/random?number=10&include-tags=chicken,desert',
           queryParameters: {
             'apiKey': apiKey,
           });

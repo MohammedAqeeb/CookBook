@@ -1,8 +1,9 @@
 import 'package:cookbook/app/data/data_provider/recipe_data_provider.dart';
 import 'package:cookbook/app/features/home/widgets/recipe_grid_view.dart';
-import 'package:cookbook/models/ingredient.dart';
+import 'package:cookbook/app/features/sign_in/bloc/authentication_bloc.dart';
 import 'package:cookbook/models/recipe.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../constants/colors.dart';
 
@@ -25,13 +26,24 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search_rounded,
-              color: AppColors.offWhite,
-            ),
-          ),
+          PopupMenuButton(
+            elevation: 0,
+            itemBuilder: ((context) {
+              return [
+                PopupMenuItem(
+                  onTap: () => BlocProvider.of<AuthenticationBloc>(context)
+                      .add(SignOut()),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.logout_sharp),
+                      SizedBox(width: 8),
+                      Text('Sign out'),
+                    ],
+                  ),
+                ),
+              ];
+            }),
+          )
         ],
         title: Column(
           children: [

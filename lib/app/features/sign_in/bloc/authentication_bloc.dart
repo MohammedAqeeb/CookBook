@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../../models/user.dart';
 import '../../../services/auth_service.dart';
@@ -22,7 +23,10 @@ class AuthenticationBloc
         } else {
           emit(const AuthenticationFailureState('create user failed'));
         }
-      } catch (e) {
+      } on FirebaseAuthException catch (e) {
+        if (e.message != null) {
+          emit(AuthenticationFailureState(e.message!));
+        }
         print(e.toString());
       }
       emit(AuthenticationLoadingState(isLoading: false));

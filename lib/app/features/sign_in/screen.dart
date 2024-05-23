@@ -19,6 +19,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -47,88 +48,107 @@ class _SignupScreenState extends State<SignupScreen> {
           right: 16,
           bottom: 16,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Text(
-                'Create Your Account',
-                style: Theme.of(context).textTheme.titleLarge,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Text(
+                  'Create Your Account',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            const Text('Email address'),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter your email',
+              const SizedBox(height: 10),
+              const Text('Email address'),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: emailController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Enter your email',
+                ),
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return 'enter email id';
+                  } else {
+                    return null;
+                  }
+                },
               ),
-            ),
-            const SizedBox(height: 20),
-            const Text('Password'),
-            TextFormField(
-              controller: passwordController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter your password',
+              const SizedBox(height: 20),
+              const Text('Password'),
+              TextFormField(
+                controller: passwordController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Enter your password',
+                ),
+                obscureText: false,
+                validator: (String? value) {
+                  if (value == null || value.length < 6) {
+                    return 'Password must have at least six characters';
+                  } else {
+                    return null;
+                  }
+                },
               ),
-              obscureText: false,
-            ),
-            const SizedBox(height: 30),
-            BlocConsumer<AuthenticationBloc, AuthenticationState>(
-              listener: (context, state) {
-                if (state is AuthenticationSuccessState) {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    HomeScreen.id,
-                    (route) => false,
-                  );
-                } else if (state is AuthenticationFailureState) {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const AlertDialog(
-                        content: Text('error'),
-                      );
-                    },
-                  );
-                }
-              },
-              builder: (context, state) {
-                return SizedBox(
-                  height: 50,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      backgroundColor: AppColors.primaryText,
-                    ),
-                    onPressed: () {
-                      BlocProvider.of<AuthenticationBloc>(context).add(
-                        SignUpUser(
-                          emailController.text.trim(),
-                          passwordController.text.trim(),
+              const SizedBox(height: 30),
+              BlocConsumer<AuthenticationBloc, AuthenticationState>(
+                listener: (context, state) {
+                  if (state is AuthenticationSuccessState) {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      HomeScreen.id,
+                      (route) => false,
+                    );
+                  } else if (state is AuthenticationFailureState) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: Text(state.errorMessage),
+                        );
+                      },
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const StadiumBorder(),
+                        backgroundColor: AppColors.primaryText,
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          BlocProvider.of<AuthenticationBloc>(context).add(
+                            SignUpUser(
+                              emailController.text.trim(),
+                              passwordController.text.trim(),
+                            ),
+                          );
+                        }
+                      },
+                      child: Text(
+                        state is AuthenticationLoadingState
+                            ? '.......'
+                            : 'Signup',
+                        style: const TextStyle(
+                          fontSize: 20,
                         ),
-                      );
-                    },
-                    child: Text(
-                      state is AuthenticationLoadingState
-                          ? '.......'
-                          : 'Signup',
-                      style: const TextStyle(
-                        fontSize: 20,
                       ),
                     ),
-                  ),
-                );
-              },
-            ),
-          ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
