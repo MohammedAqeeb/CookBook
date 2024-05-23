@@ -30,14 +30,12 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
-
         theme: ThemeData(
           fontFamily: 'Satoshi',
           textTheme: const TextTheme(),
           useMaterial3: false,
         ),
-        // home: const IntroScreen(),
-        home: const AuthenticationFlowScreen(),
+        home: const IntroScreen(),
       ),
     );
   }
