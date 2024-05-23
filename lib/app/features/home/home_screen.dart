@@ -51,7 +51,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               headerText(context),
-              buildGridView(),
+              buildData(),
             ],
           ),
         ),
@@ -92,8 +92,7 @@ class HomeScreen extends StatelessWidget {
               if (recipe.isEmpty) {
                 return const Text('Data Empty');
               } else {
-                // return buildGridView(recipe);
-                return const Text('Data Empty');
+                return buildGridView(recipe);
               }
             } else {
               return const Text('Data Empty');
@@ -106,7 +105,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget buildGridView() {
+  Widget buildGridView(List<Recipe> recipe) {
     return GridView.builder(
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
@@ -116,12 +115,10 @@ class HomeScreen extends StatelessWidget {
         childAspectRatio: 13 / 16,
         mainAxisSpacing: 12,
       ),
-      // itemCount: recipe.length,
-      itemCount: 5,
+      itemCount: recipe.length,
       itemBuilder: (context, index) {
-        // Recipe ingredient = recipe[index];
-        // return RecipeGridViewWidget(recipes: ingredient);
-        return const RecipeGridViewWidget();
+        Recipe ingredient = recipe[index];
+        return RecipeGridViewWidget(recipes: ingredient);
       },
     );
   }

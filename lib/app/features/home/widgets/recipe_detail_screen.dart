@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 
 class RecipeDetailedScreen extends StatelessWidget {
-  // final Recipe recipes;
+  final Recipe recipes;
   const RecipeDetailedScreen({
-    // required this.recipes,
+    required this.recipes,
     super.key,
   });
 
@@ -24,8 +24,7 @@ class RecipeDetailedScreen extends StatelessWidget {
               flexibleSpace: FlexibleSpaceBar(
                 title: const Text('recipes.title', textScaleFactor: 0.5),
                 background: CachedNetworkImage(
-                  imageUrl:
-                      'https://img.spoonacular.com/recipes/638199-556x370.jpg',
+                  imageUrl: recipes.image,
                   fit: BoxFit.fill,
                 ),
               ),
@@ -34,7 +33,7 @@ class RecipeDetailedScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(28),
                 child: Text(
-                  'Random Recipe Reveal',
+                  recipes.title,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
@@ -72,7 +71,7 @@ class RecipeDetailedScreen extends StatelessWidget {
                         flex: 1,
                         child: Column(
                           children: [
-                            Text('.readyInMinutes'.toString() + " Min",
+                            Text("${recipes.readyInMinutes} Min",
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 20)),
                             Text(
@@ -93,7 +92,7 @@ class RecipeDetailedScreen extends StatelessWidget {
                         flex: 1,
                         child: Column(
                           children: [
-                            Text('widget.info.servings'.toString(),
+                            Text(recipes.servings.toString(),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 20)),
                             Text(
@@ -112,7 +111,7 @@ class RecipeDetailedScreen extends StatelessWidget {
                         flex: 1,
                         child: Column(
                           children: [
-                            Text('widget.info.pricePerServing'.toString(),
+                            Text(recipes.pricePerServing.toString(),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 20)),
                             Text("Price/Servings",
@@ -125,46 +124,44 @@ class RecipeDetailedScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.all(26.0),
+                padding: const EdgeInsets.all(26.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       "Quick summary",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     HtmlWidget(
-                      "The recipe Chicken Mulligatawny Soup can be made <b>in around 45 minutes</b>. This main course has <b>368 calories</b>, <b>27g of protein</b>, and <b>10g of fat</b> per serving. This recipe serves 6. For <b>${2.5} per serving</b>, this recipe <b>covers 22%</b> of your daily requirements of vitamins and minerals. A couple people made this recipe, and 36 would say it hit the spot. It is brought to you by Foodista. <b>Autumn</b> will be even more special with this recipe. Head to the store and pick up apples, basmati rice, cayenne pepper, and a few other things to make it today. With a spoonacular <b>score of 74%</b>, this dish is pretty good. <a href=\"https://spoonacular.com/recipes/chicken-mulligatawny-soup-1589473\">Chicken Mulligatawny Soup</a>, <a href=\"https://spoonacular.com/recipes/chicken-mulligatawny-soup-678904\">Chicken Mulligatawny Soup</a>, and <a href=\"https://spoonacular.com/recipes/mulligatawny-soup-chicken-94598\">Mulligatawny Soup ( Chicken )</a> are very similar to this recipe.",
+                      recipes.summary,
                     ),
                   ],
                 ),
               ),
             ),
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.all(26.0),
+                padding: const EdgeInsets.all(26.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       "Preparation",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                       ),
                     ),
-                    SizedBox(height: 20),
-                    HtmlWidget(
-                      "The recipe Chicken Mulligatawny Soup can be made <b>in around 45 minutes</b>. This main course has <b>368 calories</b>, <b>27g of protein</b>, and <b>10g of fat</b> per serving. This recipe serves 6. For <b>${2.5} per serving</b>, this recipe <b>covers 22%</b> of your daily requirements of vitamins and minerals. A couple people made this recipe, and 36 would say it hit the spot. It is brought to you by Foodista. <b>Autumn</b> will be even more special with this recipe. Head to the store and pick up apples, basmati rice, cayenne pepper, and a few other things to make it today. With a spoonacular <b>score of 74%</b>, this dish is pretty good. <a href=\"https://spoonacular.com/recipes/chicken-mulligatawny-soup-1589473\">Chicken Mulligatawny Soup</a>, <a href=\"https://spoonacular.com/recipes/chicken-mulligatawny-soup-678904\">Chicken Mulligatawny Soup</a>, and <a href=\"https://spoonacular.com/recipes/mulligatawny-soup-chicken-94598\">Mulligatawny Soup ( Chicken )</a> are very similar to this recipe.",
-                    ),
+                    const SizedBox(height: 20),
+                    HtmlWidget(recipes.instructions),
                   ],
                 ),
               ),

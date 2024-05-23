@@ -4,9 +4,9 @@ import 'package:cookbook/models/recipe.dart';
 import 'package:flutter/material.dart';
 
 class RecipeGridViewWidget extends StatelessWidget {
-  // final Recipe recipes;
+  final Recipe recipes;
   const RecipeGridViewWidget({
-    // required this.recipes,
+    required this.recipes,
     super.key,
   });
 
@@ -16,7 +16,7 @@ class RecipeGridViewWidget extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const RecipeDetailedScreen(),
+            builder: (context) => RecipeDetailedScreen(recipes: recipes),
           ),
         );
       },
@@ -56,9 +56,7 @@ class RecipeGridViewWidget extends StatelessWidget {
                   ),
                   width: double.infinity,
                   child: CachedNetworkImage(
-                    // imageUrl: recipes.image,
-                    imageUrl:
-                        'https://img.spoonacular.com/recipes/638199-556x370.jpg',
+                    imageUrl: recipes.image,
                     fit: BoxFit.cover,
                     height: 150,
                   ),
@@ -69,11 +67,11 @@ class RecipeGridViewWidget extends StatelessWidget {
               ),
               Container(
                 padding: const EdgeInsets.all(9),
-                child: const Text(
-                  ' recipes.title dsajppdpi asd hy pfodijpiadf poijofpsdhopiuhfsodi oufhdsouhfsdih ',
+                child: Text(
+                  recipes.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             ],
