@@ -1,13 +1,12 @@
-import 'package:cookbook/app/features/sign_up/bloc/sign_up_bloc.dart';
 import 'package:cookbook/app/features/spash_screen/auth_flow.dart';
 import 'package:cookbook/app/features/spash_screen/screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'app/features/home/home_screen.dart';
 import 'app/features/internet_bloc/bloc/internet_bloc.dart';
+import 'app/features/sign_in/bloc/authentication_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +25,7 @@ class MyApp extends StatelessWidget {
           create: (context) => InternetBloc(),
         ),
         BlocProvider(
-          create: (context) => SignUpBloc(),
+          create: (context) => AuthenticationBloc(),
         ),
       ],
       child: MaterialApp(
@@ -37,8 +36,8 @@ class MyApp extends StatelessWidget {
           textTheme: const TextTheme(),
           useMaterial3: false,
         ),
-        home: const IntroScreen(),
-        // home: const AuthenticationFlowScreen(),
+        // home: const IntroScreen(),
+        home: const AuthenticationFlowScreen(),
       ),
     );
   }

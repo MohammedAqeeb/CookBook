@@ -18,11 +18,11 @@ class RecipeDetailedScreen extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: AppColors.watermelonGreen,
+              backgroundColor: AppColors.appleRed,
               pinned: true,
               expandedHeight: 250.0,
               flexibleSpace: FlexibleSpaceBar(
-                title: const Text('recipes.title', textScaleFactor: 0.5),
+                title: Text(recipes.title, textScaleFactor: 0.5),
                 background: CachedNetworkImage(
                   imageUrl: recipes.image,
                   fit: BoxFit.fill,
