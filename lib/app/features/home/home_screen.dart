@@ -1,6 +1,6 @@
 import 'package:cookbook/app/data/data_provider/recipe_data_provider.dart';
+import 'package:cookbook/app/features/authentication/login/bloc/login_bloc.dart';
 import 'package:cookbook/app/features/home/widgets/recipe_grid_view.dart';
-import 'package:cookbook/app/features/sign_in/bloc/authentication_bloc.dart';
 import 'package:cookbook/models/recipe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,48 +14,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: AppColors.strawberryRed,
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.menu,
-            color: AppColors.offWhite,
-          ),
-        ),
-        actions: [
-          PopupMenuButton(
-            elevation: 0,
-            itemBuilder: ((context) {
-              return [
-                PopupMenuItem(
-                  onTap: () => BlocProvider.of<AuthenticationBloc>(context)
-                      .add(SignOut()),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.logout_sharp),
-                      SizedBox(width: 8),
-                      Text('Sign out'),
-                    ],
-                  ),
-                ),
-              ];
-            }),
-          )
-        ],
-        title: Column(
-          children: [
-            Text(
-              'Cook Book',
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    color: AppColors.offWhite,
-                  ),
-            ),
-          ],
-        ),
-      ),
+      appBar: buildAppBar(context),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: SingleChildScrollView(
@@ -63,10 +22,59 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               headerText(context),
-              buildData(),
+              // buildData(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  AppBar buildAppBar(BuildContext context) {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: AppColors.strawberryRed,
+      centerTitle: true,
+      leading: IconButton(
+        onPressed: () {},
+        icon: const Icon(
+          Icons.menu,
+          color: AppColors.offWhite,
+        ),
+      ),
+      actions: [
+        PopupMenuButton(
+          elevation: 0,
+          itemBuilder: ((context) {
+            return [
+              PopupMenuItem(
+                onTap: () => BlocProvider.of<LoginBloc>(context).add(
+                  SignOut(),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(
+                      Icons.logout_sharp,
+                      color: AppColors.appleRed,
+                    ),
+                    SizedBox(width: 8),
+                    Text('Sign out'),
+                  ],
+                ),
+              ),
+            ];
+          }),
+        )
+      ],
+      title: Column(
+        children: [
+          Text(
+            'Cook Book',
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  color: AppColors.offWhite,
+                ),
+          ),
+        ],
       ),
     );
   }
@@ -82,7 +90,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget buildData() {
-    return FutureBuilder(
+    return FutureBuilder<List<Recipe>>(
       future: RecipeDataProvider().getRecipes(),
       builder: ((context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -98,16 +106,12 @@ class HomeScreen extends StatelessWidget {
             ),
           );
         } else {
-          if (snapshot.hasData) {
-            if (snapshot.data != null) {
-              final List<Recipe> recipe = snapshot.data!;
-              if (recipe.isEmpty) {
-                return const Text('Data Empty');
-              } else {
-                return buildGridView(recipe);
-              }
-            } else {
+          if (snapshot.data != null) {
+            final List<Recipe> recipe = snapshot.data!;
+            if (recipe.isEmpty) {
               return const Text('Data Empty');
+            } else {
+              return buildGridView(recipe);
             }
           } else {
             return const Text('Data Empty');

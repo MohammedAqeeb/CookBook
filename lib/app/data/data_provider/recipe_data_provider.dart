@@ -9,6 +9,7 @@ class RecipeDataProvider {
   String apiKey = AppKeys.apiKeys;
 
   Future<List<Recipe>> getRecipes() async {
+    await Future.delayed(const Duration(seconds: 5));
     List<Recipe> recipe = [];
 
     try {
@@ -23,12 +24,14 @@ class RecipeDataProvider {
 
         if (recipes.isNotEmpty) {
           for (var item in recipes) {
+            print(item);
             recipe.add(Recipe.fromJson(item));
             print('total number');
             print(recipe.length);
           }
         }
       } else {
+        print(response.statusMessage);
         throw Exception(
             'Failed to load recipes. Status code: ${response.statusCode}');
       }

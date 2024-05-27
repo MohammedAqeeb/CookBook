@@ -1,13 +1,13 @@
-import 'package:cookbook/app/features/home/home_screen.dart';
+import 'package:cookbook/app/features/authentication/login/login_screen.dart';
+
 import 'package:cookbook/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-import 'bloc/authentication_bloc.dart';
+import 'bloc/sign_up_bloc.dart';
 
 class SignupScreen extends StatefulWidget {
-  static String id = 'login_screen';
-
   const SignupScreen({
     Key? key,
   }) : super(key: key);
@@ -19,6 +19,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -31,25 +32,20 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.offWhite,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: AppColors.offWhite,
-        title: const Text(
-          'Login to Your Account',
-          style: TextStyle(
-            color: AppColors.strawberryRed,
-          ),
-        ),
-        centerTitle: true,
+        backgroundColor: Colors.transparent,
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(
-          left: 16,
-          right: 16,
-          bottom: 16,
-        ),
-        child: Form(
-          key: _formKey,
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(
+            top: 42,
+            left: 16,
+            right: 16,
+            bottom: 16,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -59,10 +55,29 @@ class _SignupScreenState extends State<SignupScreen> {
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Text(
                   'Create Your Account',
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: AppColors.blueberryBlue,
+                      ),
                 ),
               ),
+              const SizedBox(height: 20),
+              const Text('Enter Your Name'),
               const SizedBox(height: 10),
+              TextFormField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Enter Your Name',
+                ),
+                validator: (String? value) {
+                  if (value == null || value.length < 3) {
+                    return 'Enter valid name';
+                  } else {
+                    return null;
+                  }
+                },
+              ),
+              const SizedBox(height: 20),
               const Text('Email address'),
               const SizedBox(height: 10),
               TextFormField(
@@ -81,6 +96,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               const SizedBox(height: 20),
               const Text('Password'),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: passwordController,
                 decoration: const InputDecoration(
@@ -97,19 +113,39 @@ class _SignupScreenState extends State<SignupScreen> {
                 },
               ),
               const SizedBox(height: 30),
-              BlocConsumer<AuthenticationBloc, AuthenticationState>(
+              BlocConsumer<SignUpBloc, SignUpState>(
                 listener: (context, state) {
-                  if (state is AuthenticationSuccessState) {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      HomeScreen.id,
-                      (route) => false,
+                  if (state is SignUpSuccessState) {
+                    Fluttertoast.showToast(
+                      msg: 'User Created Successfully.',
+                      backgroundColor: AppColors.kiwiGreen,
+                      fontSize: 12,
+                      textColor: AppColors.primaryFourElementText,
+                      toastLength: Toast.LENGTH_SHORT,
                     );
-                  } else if (state is AuthenticationFailureState) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => const LoginScreen(),
+                      ),
+                    );
+
+                    // Navigator.pushNamedAndRemoveUntil(
+                    //   context,
+                    //   HomeScreen.id,
+                    //   (route) => false,
+                    // );
+                  } else if (state is SignUpFailureState) {
                     showDialog(
                       context: context,
                       builder: (context) {
                         return AlertDialog(
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Cancel'),
+                            ),
+                          ],
                           content: Text(state.errorMessage),
                         );
                       },
@@ -127,18 +163,17 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          BlocProvider.of<AuthenticationBloc>(context).add(
+                          BlocProvider.of<SignUpBloc>(context).add(
                             SignUpUser(
                               emailController.text.trim(),
                               passwordController.text.trim(),
+                              nameController.text.trim(),
                             ),
                           );
                         }
                       },
                       child: Text(
-                        state is AuthenticationLoadingState
-                            ? '.......'
-                            : 'Signup',
+                        state is SignUpLoadingState ? '.......' : 'Signup',
                         style: const TextStyle(
                           fontSize: 20,
                         ),
@@ -146,6 +181,25 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   );
                 },
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Already have an Account ?'),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const LoginScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text('Login'),
+                  ),
+                ],
               ),
             ],
           ),

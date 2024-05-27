@@ -1,5 +1,5 @@
+import 'package:cookbook/app/features/authentication/login/login_screen.dart';
 import 'package:cookbook/app/features/home/home_screen.dart';
-import 'package:cookbook/app/features/sign_in/screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -12,10 +12,10 @@ class AuthenticationFlowScreen extends StatelessWidget {
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData || snapshot.data != null) {
             return const HomeScreen();
           } else {
-            return const SignupScreen();
+            return const LoginScreen();
           }
         },
       ),

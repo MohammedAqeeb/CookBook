@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cookbook/main.dart';
+import 'package:cookbook/app/features/authentication/auth_flow_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -19,16 +19,16 @@ class _IntroScreenState extends State<IntroScreen> {
     _controller = VideoPlayerController.asset('assets/video/cook.mp4')
       ..initialize().then((_) {
         _controller.play();
-        _controller.setLooping(true);
+        _controller.setLooping(false);
 
         setState(() {});
       });
 
-    Timer(const Duration(seconds: 5), () {
+    Timer(const Duration(seconds: 4), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const MyHomePage(),
+          builder: (context) => const AuthenticationFlowScreen(),
         ),
       );
     });
@@ -53,45 +53,6 @@ class _IntroScreenState extends State<IntroScreen> {
               ),
             ),
           ),
-          // Positioned(
-          //   bottom: 50.0,
-          //   left: 16.0,
-          //   right: 16.0,
-          //   child: Column(
-          //     children: [
-          //       FilledButton(
-          //         style: FilledButton.styleFrom(
-          //           minimumSize: const Size.fromHeight(49.0),
-          //         ),
-          //         onPressed: () {},
-          //         child: Text(
-          //           'Sign up or Login',
-          //           textAlign: TextAlign.center,
-          //           style: Theme.of(context).textTheme.titleMedium!.copyWith(
-          //                 fontWeight: FontWeight.bold,
-          //                 color: Colors.white,
-          //               ),
-          //         ),
-          //       ),
-          //       const SizedBox(height: 16.0),
-          //       OutlinedButton(
-          //         style: OutlinedButton.styleFrom(
-          //           side: const BorderSide(color: Colors.white, width: 1.5),
-          //           minimumSize: const Size.fromHeight(48.0),
-          //         ),
-          //         onPressed: () {},
-          //         child: Text(
-          //           'Continue as Guest',
-          //           textAlign: TextAlign.center,
-          //           style: Theme.of(context).textTheme.titleMedium!.copyWith(
-          //                 fontWeight: FontWeight.bold,
-          //                 color: Colors.white,
-          //               ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
     );

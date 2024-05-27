@@ -3,11 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  String? errorMsg;
 
   /// create user
-  Future<UserModel?> signUpUser(
+  Future<UserModel?> createUser(
     String email,
     String password,
+    String userName,
   ) async {
     try {
       final UserCredential userCredential =
@@ -17,6 +19,7 @@ class AuthService {
       );
       final User? firebaseUser = userCredential.user;
       if (firebaseUser != null) {
+        firebaseUser.updateDisplayName(userName);
         return UserModel(
           id: firebaseUser.uid,
           email: firebaseUser.email ?? '',
@@ -24,9 +27,33 @@ class AuthService {
         );
       }
     } on FirebaseAuthException catch (e) {
-      print(e.toString());
+      if (e.message != null) {
+        errorMsg = e.message!;
+      }
     }
     return null;
+  }
+
+  Future<UserModel?> signInUser(
+    String email,
+    String password,
+  ) async {
+    UserModel? userModel;
+    try {
+      await _firebaseAuth
+          .signInWithEmailAndPassword(
+            email: email.trim(),
+            password: password.trim(),
+          )
+          .then(
+            (UserCredential userCredential) {},
+          );
+    } on FirebaseAuthException catch (e) {
+      if (e.message != null) {
+        errorMsg = e.message!;
+      }
+    }
+    return userModel;
   }
 
   Future<void> signOutUser() async {
